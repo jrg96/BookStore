@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BookStoreDataAccess.Repository.IRepository;
 using BookStoreDataAccess.Repository;
+using AutoMapper;
+using BookStore.Helpers;
 
 namespace BookStore
 {
@@ -39,6 +41,10 @@ namespace BookStore
 
             // Agregar clases repositorio
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICoverTypeRepository, CoverTypeRepository>();
+
+            // Agregando automapper
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

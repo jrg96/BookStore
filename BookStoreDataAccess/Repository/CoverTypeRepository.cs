@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookStoreDataAccess.Repository
 {
-    class CoverTypeRepository : ICoverTypeRepository
+    public class CoverTypeRepository : ICoverTypeRepository
     {
         private readonly ApplicationDbContext _context;
 

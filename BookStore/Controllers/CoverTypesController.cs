@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BookStoreDataAccess.Repository.IRepository;
 using BookStoreModels;
 using BookStoreModels.DTO.CoverType;
@@ -15,10 +16,12 @@ namespace BookStore.Controllers
     public class CoverTypesController : ControllerBase
     {
         private readonly ICoverTypeRepository _coverTypeRepository;
+        private readonly IMapper _mapper;
 
-        public CoverTypesController(ICoverTypeRepository coverTypeRepository)
+        public CoverTypesController(ICoverTypeRepository coverTypeRepository, IMapper mapper)
         {
             _coverTypeRepository = coverTypeRepository;
+            _mapper = mapper;
         }
 
         // GET api/covertypes
@@ -36,7 +39,7 @@ namespace BookStore.Controllers
         {
             var cover = await _coverTypeRepository.GetCoverType(id);
 
-            if (cover != null)
+            if (cover == null)
             {
                 throw new Exception($"Cover with id {id} does not exist");
             }
@@ -59,13 +62,27 @@ namespace BookStore.Controllers
              * ZONA DE PROCESAMIENTO DE LA PETICION
              * --------------------------------------------------------------------------
              */
-            var cover = new CoverType
-            {
-                Name = coverTypeForInsertDTO.Name
-            };
+            var cover = new CoverType();
+            _mapper.Map(coverTypeForInsertDTO, cover);
 
             _coverTypeRepository.Add<CoverType>(cover);
+            await _coverTypeRepository.SaveAll();
             return Ok();
+        }
+
+        // PUT api/covertypes/id
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, CoverTypeForUpdateDTO coverTypeForUpdateDTO)
+        {
+            var coverDB = await _coverTypeRepository.GetCoverType(id);
+            _mapper.Map(coverTypeForUpdateDTO, coverDB);
+
+            if (await _coverTypeRepository.SaveAll())
+            {
+                return NoContent();
+            }
+
+            throw new Exception($"Error while updating cover with id: {id}");
         }
 
         // DELETE api/covertypes/id
