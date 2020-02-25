@@ -16,7 +16,10 @@ function loadDataTable() {
             "dataSrc": "aaData"
         },
         "columns": [
-            { "data": "title", "width": "60%" },
+            { "data": "title", "width": "20%" },
+            { "data": "author", "width": "20%" },
+            { "data": "isbn", "width": "20%" },
+            { "data": "category.name", "width": "20%" },
             {
                 "data": "id",
                 "render": function (data) {
@@ -31,7 +34,7 @@ function loadDataTable() {
                             </div>
                            `;
                 },
-                "width": "40%"
+                "width": "20%"
             }
         ]
     });
