@@ -42,6 +42,7 @@ namespace BookStore
             // Agregar clases repositorio
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICoverTypeRepository, CoverTypeRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             // Agregando automapper
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
