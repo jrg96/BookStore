@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStoreDataAccess.Repository.IRepository;
+using BookStoreModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Areas.Admin.Controllers
@@ -20,6 +21,25 @@ namespace BookStore.Areas.Admin.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public async Task<IActionResult> Upsert(int? id)
+        {
+            Category category = new Category();
+
+            if (id == null)
+            {
+                return View(category);
+            }
+
+            category = await this._categoryRepository.GetCategory(id.GetValueOrDefault());
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
         }
     }
 }
