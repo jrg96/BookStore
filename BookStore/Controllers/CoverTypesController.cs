@@ -74,7 +74,23 @@ namespace BookStore.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, CoverTypeForUpdateDTO coverTypeForUpdateDTO)
         {
+            /*
+             * ---------------------------------------------------------------------------
+             * ZONA DE VALIDACION
+             * ---------------------------------------------------------------------------
+             */
             var coverDB = await _coverTypeRepository.GetCoverType(id);
+
+            if (coverDB == null)
+            {
+                throw new Exception($"Cover with id {id} does not exist");
+            }
+
+            /*
+             * --------------------------------------------------------------------------
+             * ZONA DE PROCESAMIENTO DE LA PETICION
+             * --------------------------------------------------------------------------
+             */
             _mapper.Map(coverTypeForUpdateDTO, coverDB);
 
             if (await _coverTypeRepository.SaveAll())
@@ -89,6 +105,12 @@ namespace BookStore.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            /*
+             * ---------------------------------------------------------------------------
+             * ZONA DE VALIDACION
+             * ---------------------------------------------------------------------------
+             */
+            // Chequear si el cover existe
             var cover = await _coverTypeRepository.GetCoverType(id);
 
             if (cover == null)
@@ -96,6 +118,11 @@ namespace BookStore.Controllers
                 throw new Exception($"Cover with id {id} does not exist");
             }
 
+            /*
+             * --------------------------------------------------------------------------
+             * ZONA DE PROCESAMIENTO DE LA PETICION
+             * --------------------------------------------------------------------------
+             */
             _coverTypeRepository.Delete<CoverType>(cover);
             await _coverTypeRepository.SaveAll();
             return NoContent();
