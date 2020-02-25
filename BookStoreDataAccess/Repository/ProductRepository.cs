@@ -49,7 +49,7 @@ namespace BookStoreDataAccess.Repository
             return await PagedList<Product>.CreateAsync(products, userPageParams.PageNumber, userPageParams.PageSize);
         }
 
-        public Task<bool> SaveAll()
+        public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;
         }
