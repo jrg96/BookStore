@@ -120,6 +120,17 @@
                     <span asp-validation-for="Product.CoverTypeId" class="text-danger"></span>
                 </div>
             </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Product.ImageUrl"></label>
+                </div>
+                <div class="col-8">
+                    <input type="text" asp-for="Product.ImageUrl" class="form-control" />
+                    <span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
+                </div>
+            </div>
+
             <div class="form-group row">
                 <div class="col-8 offset-4">
                     @if (Model.Product.Id != 0)

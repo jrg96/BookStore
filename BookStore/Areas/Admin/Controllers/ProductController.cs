@@ -64,24 +64,24 @@ namespace BookStore.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upsert(Category category)
+        public async Task<IActionResult> Upsert(ProductViewModel productViewModel)
         {
             if (ModelState.IsValid)
             {
-                if (category.Id == 0)
+                if (productViewModel.Product.Id == 0)
                 {
-                    _categoryRepository.Add<Category>(category);
+                    _productRepository.Add<Product>(productViewModel.Product);
                 }
                 else
                 {
-                    _categoryRepository.Update<Category>(category);
+                    _productRepository.Update<Product>(productViewModel.Product);
                 }
 
-                await _categoryRepository.SaveAll();
+                await _productRepository.SaveAll();
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(category);
+            return View(productViewModel);
         }
     }
 }

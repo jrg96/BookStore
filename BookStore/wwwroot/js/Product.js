@@ -28,7 +28,7 @@ function loadDataTable() {
                                 <a href="/Admin/Product/Upsert/${data}" class="btn btn-success text-white" style="cursor: pointer">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <a onclick=Delete("/api/covertypes/${data}") class="btn btn-danger text-white" style="cursor: pointer">
+                                <a onclick=Delete("/api/products/${data}") class="btn btn-danger text-white" style="cursor: pointer">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </div>
@@ -54,7 +54,7 @@ function Delete(url) {
                 type: "DELETE",
                 url: url,
                 success: function (data) {
-                    toastr.success("Category deleted successfully");
+                    toastr.success("Product deleted successfully");
                     dataTable.ajax.reload();
                 },
                 error: function (data) {
