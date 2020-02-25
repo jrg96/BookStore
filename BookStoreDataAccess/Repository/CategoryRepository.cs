@@ -28,6 +28,11 @@ namespace BookStoreDataAccess.Repository
             _context.Remove(entity);
         }
 
+        public void Update<T>(T entity) where T : class
+        {
+            _context.Entry<T>(entity).State = EntityState.Modified;
+        }
+
         public async Task<IEnumerable<Category>> GetCategories()
         {
             return await _context.Categories.ToListAsync();
