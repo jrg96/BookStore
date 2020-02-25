@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace BookStoreModels
+namespace BookStoreModels.DTO.CoverType
 {
-    public class CoverType
+    public class CoverTypeForInsertDTO
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         [MaxLength(50)]
         [MinLength(5)]
-        [Display(Name = "Cover Type Name")]
         public string Name { get; set; }
     }
 }
