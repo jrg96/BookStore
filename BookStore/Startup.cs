@@ -12,6 +12,8 @@ using BookStore.DataAccess.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using BookStoreDataAccess.Repository.IRepository;
+using BookStoreDataAccess.Repository;
 
 namespace BookStore
 {
@@ -34,6 +36,9 @@ namespace BookStore
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
+
+            // Agregar clases repositorio
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
