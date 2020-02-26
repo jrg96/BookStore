@@ -5,12 +5,15 @@ using System.Threading.Tasks;
 using BookStoreDataAccess.Repository.IRepository;
 using BookStoreModels;
 using BookStoreModels.ViewModels;
+using BookStoreUtility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.ROLE_ADMIN)]
     public class ProductController : Controller
     {
         private readonly IProductRepository _productRepository;

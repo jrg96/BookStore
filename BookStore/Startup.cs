@@ -18,6 +18,9 @@ using AutoMapper;
 using BookStore.Helpers;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using BookStoreUtility;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BookStore
 {
@@ -61,6 +64,25 @@ namespace BookStore
 
             // Agregando automapper
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+
+            // Configurando Middleware JWT
+            /*
+             * -----------------------------------------------------------------------------
+             * NOTA: COMO EL PROYECTO SE CONFIGURO CON IDENTITY PRIMERO, POR DEFAULT
+             * INTENTARA AUTENTICAR EN BASE A IDENTITY, SI SE DESEA AUTENTICAR EN BASE
+             * A JWT, SE DEBE ESPECIFICAR EXPLICITAMENTE
+             * -----------------------------------------------------------------------------
+             */
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
