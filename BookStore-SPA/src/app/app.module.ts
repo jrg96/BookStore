@@ -23,6 +23,14 @@ export class CustomHammerConfig extends HammerGestureConfig  {
   };
 }
 
+
+// Configuracion de JWT
+import { JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
+
 @NgModule({
    declarations: [
       AppComponent,
@@ -37,7 +45,16 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       // Routing, Http y formularios
       FormsModule,
       RouterModule.forRoot(appRoutes),
-      HttpClientModule
+      HttpClientModule,
+
+      // Configuracion JWT
+      JwtModule.forRoot({
+        config: {
+           tokenGetter: tokenGetter,
+           whitelistedDomains: ['localhost:5000'],
+           blacklistedRoutes: ['localhost:5000/api/auth']
+        }
+     })
    ],
    providers: [
       // Evitar errores del bootstrap
