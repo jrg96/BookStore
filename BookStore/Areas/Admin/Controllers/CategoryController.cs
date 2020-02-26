@@ -66,5 +66,34 @@ namespace BookStore.Areas.Admin.Controllers
 
             return View(category);
         }
+
+        /*
+         * ------------------------------------------------------------------------------
+         * API INTERNA DE LA APLICACION
+         * ------------------------------------------------------------------------------
+         */
+        [HttpGet("/Admin/Category/datatable")]
+        public async Task<IActionResult> GetAll()
+        {
+            var categories = await _categoryRepository.GetCategories();
+
+            return Ok(categories);
+        }
+
+        // DELETE api/categories/id
+        [HttpDelete("/Admin/Category/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var category = await _categoryRepository.GetCategory(id);
+
+            if (category == null)
+            {
+                throw new Exception("Username with ID does not exists");
+            }
+
+            _categoryRepository.Delete<Category>(category);
+            await _categoryRepository.SaveAll();
+            return NoContent();
+        }
     }
 }

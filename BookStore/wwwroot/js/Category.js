@@ -7,7 +7,7 @@ $(document).ready(function() {
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": {
-            "url": "/api/categories",
+            "url": "/Admin/Category/datatable",
             "dataSrc": ""
         },
         "columns": [
@@ -20,7 +20,7 @@ function loadDataTable() {
                                 <a href="/Admin/Category/Upsert/${data}" class="btn btn-success text-white" style="cursor: pointer">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <a onclick=Delete("/api/categories/${data}") class="btn btn-danger text-white" style="cursor: pointer">
+                                <a onclick=Delete("/Admin/Category/${data}") class="btn btn-danger text-white" style="cursor: pointer">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </div>
