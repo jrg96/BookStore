@@ -25,13 +25,15 @@ namespace BookStore.Controllers
         private readonly IApplicationUserRepository _applicationUserReposiory;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
+        private readonly UserManager<IdentityUser> _userManager;
 
         public AuthController(IApplicationUserRepository applicationUserRepository, IMapper mapper,
-            IConfiguration config)
+            IConfiguration config, UserManager<IdentityUser> userManager)
         {
             _applicationUserReposiory = applicationUserRepository;
             _mapper = mapper;
             _config = config;
+            _userManager = userManager;
         }
 
         // POST api/auth/register
@@ -92,21 +94,28 @@ namespace BookStore.Controllers
             {
                 return Ok(new {
                     user,
-                    token = GenerateToken(user)
+                    token = await GenerateToken(user)
                 });
             }
 
             return Unauthorized();
         }
 
-        private string GenerateToken(IdentityUser user)
+        private async Task<string> GenerateToken(IdentityUser user)
         {
             // Creando los claims del token JWT
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName)
             };
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
 
