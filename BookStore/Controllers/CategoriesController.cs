@@ -4,11 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookStoreDataAccess.Repository.IRepository;
 using BookStoreModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
@@ -21,6 +24,7 @@ namespace BookStore.Controllers
         }
 
         // GET api/categories
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

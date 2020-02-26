@@ -8,11 +8,14 @@ using BookStoreDataAccess.Repository.Page;
 using BookStoreModels;
 using BookStoreModels.DTO;
 using BookStoreModels.DTO.Company;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class CompaniesController : ControllerBase
@@ -28,6 +31,7 @@ namespace BookStore.Controllers
 
 
         // GET api/companies
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetCompanies([FromQuery]UserPageParams userPageParams)
         {
@@ -37,31 +41,8 @@ namespace BookStore.Controllers
             return Ok(companies);
         }
 
-        // GET api/companies/datatable
-        [HttpGet("datatable")]
-        public async Task<IActionResult> GetCompaniesDatatable([FromQuery]DatatableForSelectDTO datatableForSelectDTO)
-        {
-            // Convert to UserPageParams the API knows
-            var userPageParams = new UserPageParams();
-            userPageParams.PageNumber = (int)Math.Ceiling(datatableForSelectDTO.Start / (double)datatableForSelectDTO.Length) + 1;
-            userPageParams.PageSize = datatableForSelectDTO.Length;
-
-
-            // Get Data
-            var companies = await _companyRepository.GetCompanies(userPageParams);
-
-            // Wrap result in a format Datatable Knows
-            var result = new DatatableResponseDTO();
-            result.aaData = companies;
-            result.draw = datatableForSelectDTO.Draw;
-            result.iTotalDisplayRecords = companies.TotalCount;
-            result.iTotalRecords = companies.TotalCount;
-
-            Response.AddPagination(companies.CurrentPage, companies.PageSize, companies.TotalCount, companies.TotalPages);
-            return Ok(result);
-        }
-
         // GET api/companies/1
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCompany(int id)
         {

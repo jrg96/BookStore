@@ -11,7 +11,7 @@ function loadDataTable() {
         'serverSide': true,
         'serverMethod': 'get',
         "ajax": {
-            "url": "/api/companies/datatable",
+            "url": "/Admin/Company/datatable",
             "dataSrc": "aaData"
         },
         "columns": [
@@ -24,7 +24,7 @@ function loadDataTable() {
                                 <a href="/Admin/Company/Upsert/${data}" class="btn btn-success text-white" style="cursor: pointer">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <a onclick=Delete("/api/companies/${data}") class="btn btn-danger text-white" style="cursor: pointer">
+                                <a onclick=Delete("/Admin/Company/${data}") class="btn btn-danger text-white" style="cursor: pointer">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </div>
