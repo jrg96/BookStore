@@ -8,11 +8,14 @@ using BookStoreDataAccess.Repository.Page;
 using BookStoreModels;
 using BookStoreModels.DTO;
 using BookStoreModels.DTO.Product;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
@@ -52,6 +55,7 @@ namespace BookStore.Controllers
         }
 
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "InsertEditDeletePolicy")]
         [HttpPost]
         public async Task<IActionResult> InsertProduct(ProductForInsertDTO productForInsertDTO)
         {
@@ -80,6 +84,7 @@ namespace BookStore.Controllers
         }
 
         // PUT api/products/id
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "InsertEditDeletePolicy")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, ProductForUpdateDTO productForUpdateDTO)
         {
@@ -114,6 +119,7 @@ namespace BookStore.Controllers
 
 
         // DELETE api/products/1
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "InsertEditDeletePolicy")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {

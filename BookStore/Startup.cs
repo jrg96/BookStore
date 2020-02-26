@@ -83,6 +83,10 @@ namespace BookStore
                         ValidateAudience = false
                     };
                 });
+
+            services.AddAuthorization(options => {
+                options.AddPolicy("InsertEditDeletePolicy", policy => policy.RequireRole(SD.ROLE_ADMIN));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

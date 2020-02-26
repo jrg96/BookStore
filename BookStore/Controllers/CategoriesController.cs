@@ -34,6 +34,7 @@ namespace BookStore.Controllers
         }
 
         // DELETE api/categories/id
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "InsertEditDeletePolicy")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

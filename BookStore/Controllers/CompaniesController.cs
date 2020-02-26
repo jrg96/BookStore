@@ -58,6 +58,7 @@ namespace BookStore.Controllers
 
 
         // POST api/companies
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "InsertEditDeletePolicy")]
         [HttpPost]
         public async Task<IActionResult> InsertCompany(CompanyForInsertDTO companyForInsertDTO)
         {
@@ -87,6 +88,7 @@ namespace BookStore.Controllers
 
 
         // PUT api/products/id
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "InsertEditDeletePolicy")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, CompanyForUpdateDTO companyForUpdateDTO)
         {
@@ -120,6 +122,7 @@ namespace BookStore.Controllers
         }
 
         // DELETE api/products/1
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "InsertEditDeletePolicy")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompany(int id)
         {

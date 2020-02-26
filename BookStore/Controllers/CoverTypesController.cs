@@ -6,11 +6,14 @@ using AutoMapper;
 using BookStoreDataAccess.Repository.IRepository;
 using BookStoreModels;
 using BookStoreModels.DTO.CoverType;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class CoverTypesController : ControllerBase
@@ -25,6 +28,7 @@ namespace BookStore.Controllers
         }
 
         // GET api/covertypes
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -34,6 +38,7 @@ namespace BookStore.Controllers
         }
 
         // GET api/covertypes/id
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCover(int id)
         {
@@ -48,6 +53,7 @@ namespace BookStore.Controllers
         }
 
         // POST api/covertypes/id
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "InsertEditDeletePolicy")]
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody] CoverTypeForInsertDTO coverTypeForInsertDTO)
         {
@@ -71,6 +77,7 @@ namespace BookStore.Controllers
         }
 
         // PUT api/covertypes/id
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "InsertEditDeletePolicy")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, CoverTypeForUpdateDTO coverTypeForUpdateDTO)
         {
@@ -102,6 +109,7 @@ namespace BookStore.Controllers
         }
 
         // DELETE api/covertypes/id
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "InsertEditDeletePolicy")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
