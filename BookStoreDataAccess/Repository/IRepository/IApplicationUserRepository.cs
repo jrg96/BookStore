@@ -1,5 +1,6 @@
 ﻿using BookStoreDataAccess.Repository.Page;
 using BookStoreModels;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,5 +21,7 @@ namespace BookStoreDataAccess.Repository.IRepository
         Task<PagedList<ApplicationUser>> GetUsers(UserPageParams userPageParams);
 
         Task<ApplicationUser> GetUser(int id);
+
+        Task<IdentityUser> Login(string email, string password);
     }
 }

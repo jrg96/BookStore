@@ -10,6 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using BookStoreModels.DTO;
 using BookStoreModels.DTO.ApplicationUser;
 using AutoMapper;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace BookStore.Controllers
 {
@@ -19,11 +24,14 @@ namespace BookStore.Controllers
     {
         private readonly IApplicationUserRepository _applicationUserReposiory;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _config;
 
-        public AuthController(IApplicationUserRepository applicationUserRepository, IMapper mapper)
+        public AuthController(IApplicationUserRepository applicationUserRepository, IMapper mapper,
+            IConfiguration config)
         {
             _applicationUserReposiory = applicationUserRepository;
             _mapper = mapper;
+            _config = config;
         }
 
         // POST api/auth/register
@@ -57,6 +65,64 @@ namespace BookStore.Controllers
 
             // Paso 3: Retornamos mensaje de exito
             return Ok();
+        }
+
+
+        // POST api/auth/login
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUser(AppUserForLoginDTO appUserForLoginDTO)
+        {
+            /*
+             * ---------------------------------------------------------------------------
+             * ZONA DE VALIDACION
+             * ---------------------------------------------------------------------------
+             */
+
+            /*
+             * --------------------------------------------------------------------------
+             * ZONA DE PROCESAMIENTO DE LA PETICION
+             * --------------------------------------------------------------------------
+             */
+
+            // Paso 1: Realizamos el login
+            var user = await _applicationUserReposiory.Login(appUserForLoginDTO.UserName, appUserForLoginDTO.Password);
+
+            // Paso 2: Verificamos si el login fue exitoso
+            if (user != null)
+            {
+                return Ok(new {
+                    user,
+                    token = GenerateToken(user)
+                });
+            }
+
+            return Unauthorized();
+        }
+
+        private string GenerateToken(IdentityUser user)
+        {
+            // Creando los claims del token JWT
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
         }
     }
 }

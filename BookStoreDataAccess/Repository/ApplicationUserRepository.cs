@@ -13,10 +13,13 @@ namespace BookStoreDataAccess.Repository
     public class ApplicationUserRepository : IApplicationUserRepository
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signinManager;
 
-        public ApplicationUserRepository(UserManager<IdentityUser> userManager)
+        public ApplicationUserRepository(UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signinManager)
         {
             _userManager = userManager;
+            _signinManager = signinManager;
         }
 
         public async Task<int> AddAsNormalUser<ApplicationUser>(BookStoreModels.ApplicationUser user, string password)
@@ -62,6 +65,20 @@ namespace BookStoreDataAccess.Repository
         public Task<bool> SaveAll()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IdentityUser> Login(string email, string password)
+        {
+            // Obtener el usuario con email determinado
+            var user = await _userManager.FindByEmailAsync(email);
+            var result = await _signinManager.CheckPasswordSignInAsync(user, password, false);
+
+            if (result.Succeeded)
+            {
+                return user;
+            }
+
+            return null;
         }
     }
 }
