@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStoreModels;
+using BookStoreModels.DTO.Company;
 using BookStoreModels.DTO.CoverType;
 using BookStoreModels.DTO.Product;
 using System;
@@ -17,6 +18,8 @@ namespace BookStore.Helpers
             CreateMap<CoverTypeForInsertDTO, CoverType>();
             CreateMap<ProductForInsertDTO, Product>();
             CreateMap<ProductForUpdateDTO, Product>();
+            CreateMap<CompanyForInsertDTO, Company>();
+            CreateMap<CompanyForUpdateDTO, Company>();
         }
     }
 }
