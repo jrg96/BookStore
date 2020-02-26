@@ -3,6 +3,7 @@ using BookStoreModels;
 using BookStoreModels.DTO.Company;
 using BookStoreModels.DTO.CoverType;
 using BookStoreModels.DTO.Product;
+using BookStoreModels.DTO.ApplicationUser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace BookStore.Helpers
             CreateMap<ProductForUpdateDTO, Product>();
             CreateMap<CompanyForInsertDTO, Company>();
             CreateMap<CompanyForUpdateDTO, Company>();
+            CreateMap<AppUserForCommonInsertDTO, ApplicationUser>();
         }
     }
 }
