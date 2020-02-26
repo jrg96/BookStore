@@ -16,6 +16,8 @@ using BookStoreDataAccess.Repository.IRepository;
 using BookStoreDataAccess.Repository;
 using AutoMapper;
 using BookStore.Helpers;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using BookStoreUtility;
 
 namespace BookStore
 {
@@ -34,8 +36,19 @@ namespace BookStore
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("BookStore")));
-            services.AddDefaultIdentity<IdentityUser>()
+            
+            /*
+             * -------------------------------------------------------------------------------------
+             * AGREGANDO CUSTOM IDENTITY
+             * -------------------------------------------------------------------------------------
+             */
+            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddSingleton<IEmailSender, CustomEmailSender>();
+
+            
+            
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
 
