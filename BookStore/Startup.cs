@@ -43,6 +43,7 @@ namespace BookStore
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICoverTypeRepository, CoverTypeRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
 
             // Agregando automapper
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
