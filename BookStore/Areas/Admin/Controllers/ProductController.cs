@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStoreDataAccess.Repository.IRepository;
+using BookStoreDataAccess.Repository.Page;
 using BookStoreModels;
+using BookStoreModels.DTO;
 using BookStoreModels.ViewModels;
 using BookStoreUtility;
 using Microsoft.AspNetCore.Authorization;
@@ -85,6 +87,65 @@ namespace BookStore.Areas.Admin.Controllers
             }
 
             return View(productViewModel);
+        }
+
+
+        /*
+         * ------------------------------------------------------------------------------
+         * API INTERNA DE LA APLICACION
+         * ------------------------------------------------------------------------------
+         */
+
+        // GET api/products/datatable
+        [HttpGet("/Admin/Product/datatable")]
+        public async Task<IActionResult> GetProductsDatatable([FromQuery]DatatableForSelectDTO datatableForSelectDTO)
+        {
+            // Convert to UserPageParams the API knows
+            var userPageParams = new UserPageParams();
+            userPageParams.PageNumber = (int)Math.Ceiling(datatableForSelectDTO.Start / (double)datatableForSelectDTO.Length) + 1;
+            userPageParams.PageSize = datatableForSelectDTO.Length;
+
+
+            // Get Data
+            var products = await _productRepository.GetProduts(userPageParams);
+
+            // Wrap result in a format Datatable Knows
+            var result = new DatatableResponseDTO();
+            result.aaData = products;
+            result.draw = datatableForSelectDTO.Draw;
+            result.iTotalDisplayRecords = products.TotalCount;
+            result.iTotalRecords = products.TotalCount;
+
+            Response.AddPagination(products.CurrentPage, products.PageSize, products.TotalCount, products.TotalPages);
+            return Ok(result);
+        }
+
+        // DELETE api/products/1
+        [HttpDelete("/Admin/Product/{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            /*
+             * ---------------------------------------------------------------------------
+             * ZONA DE VALIDACION
+             * ---------------------------------------------------------------------------
+             */
+            // Chequear si el producto existe
+            var productDB = await _productRepository.GetProduct(id);
+
+            if (productDB == null)
+            {
+                throw new Exception($"Product with id {id} does not exist");
+            }
+
+
+            /*
+             * --------------------------------------------------------------------------
+             * ZONA DE PROCESAMIENTO DE LA PETICION
+             * --------------------------------------------------------------------------
+             */
+            _productRepository.Delete<Product>(productDB);
+            await _productRepository.SaveAll();
+            return NoContent();
         }
     }
 }
