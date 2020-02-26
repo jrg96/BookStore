@@ -50,7 +50,7 @@ namespace BookStore
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSingleton<IEmailSender, CustomEmailSender>();
 
-            
+            services.AddCors();
             
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
@@ -107,6 +107,8 @@ namespace BookStore
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
             app.UseAuthorization();
